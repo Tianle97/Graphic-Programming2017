@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>MouseClick</title>
+
+    <style type="text/css">
+      canvas {
+        border: 1px solid grey; 
+      }
+    </style>
+
+  </head>
+
+  <body>
+	<p>This is a paragraph.</p>
+
+    <canvas id="canvas-for-ball" width = '900' height = '900'></canvas>
+
+    <script type="text/javascript">
+      
+      
+		  // Gets a handle to the element with id canvasOne.
+		  var canvas = document.getElementById("canvas-for-ball");
+		  // Get a 2D context for the canvas.
+		  var ctx = canvas.getContext("2d");
+		  // Make the fill style red.
+      ctx.fillStyle = "yellow";
+      var noClicks = 0;
+      canvas.addEventListener("click", function(event) { 
+		x = event.pageX - ctx.canvas.offsetLeft;   
+		y = event.pageY - ctx.canvas.offsetTop; 
+		ctx.beginPath();
+		//ctx.arc(50, 50, 6, 0, 2 * Math.PI);
+        ctx.arc(x, y, 10, 0, 2 * Math.PI);
+        ctx.fill(); 
+		ctx.strokeStyle = "green";
+		ctx.stroke();
+        noClicks += 1;
+        console.log(noClicks);
+      },false);
+	  
+    </script>
+
+  </body>
+
+</html>
+
+
+
+
+

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Canvas lab3</title>
+
+    <style type="text/css">
+      canvas {
+          background-color: white;
+		  border: 3px dashed blue;
+		 
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <canvas id="canvas-for-ball" width = '500' height = '800'></canvas>
+
+    <script type="text/javascript">
+      // Gets a handle to the element with id canvasOne.
+      var canvas = document.getElementById("canvas-for-ball");
+      // Get a 2D context for the canvas.
+      var ctx = canvas.getContext("2d");
+      
+      // create ball object.
+     var ball  = {
+	   
+	  
+	   y: 100,
+	   x: 50,
+	   r: 30,
+	   yp: 5,
+	   xp: 3,   
+	   g: 5, 
+       smax: 20,   
+       h: 800,	   
+	   
+		 }
+		 
+	   
+      // A function to repeat every time the animation loops.
+      function repeatme() {
+	  
+	  
+	  
+        // Draw a pizza
+		
+			ctx.clearRect(0,0,canvas.width,canvas.height)
+		       ctx.beginPath();
+				ctx.arc(ball.x,ball.y,ball.r-5,0,2*Math.PI);
+				ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
+				ctx.lineWidth = 1;
+				ctx.lineCap = "round";
+				
+			 	//divide into 7 pieces of pizza.
+				 for (ball.theta = 0; ball.theta <= 14; ball.theta = ball.theta + 2)
+				{
+				ctx.moveTo(ball.x,ball.y);
+				ctx.lineTo(ball.x+ball.r*Math.cos((ball.theta)/7*Math.PI),ball.y+ball.r*Math.sin((ball.theta)/7 *Math.PI));
+				}
+				
+				ctx.fillStyle = 'orange';
+				ctx.fill();
+				
+				ctx.stroke();
+				ctx.closePath();
+				
+				
+		if ((ball.x > canvas.width - ball.r)) //if the ball touch the far-right it will be move to left.
+		{
+		    ball.xp = -ball.xp;		   
+		}
+		if (ball.x < ball.r)          //if the ball touch the far-left it will be move right .
+		{
+			ball.xp = - ball.xp;
+		}
+		if ((ball.y >= canvas.height - ball.r))
+		{
+			ball.yp = -ball.yp;   //if the ball touch the bottom it will be background 
+			ball.yp -= 1;
+			 
+		}
+			if (ball.y <= ball.r)
+			{
+				 
+				ball.yp = -ball.yp;   //if the ball arrives the top and then it will be move backwards.
+				ball.yp += 2;          //make the ball have speed in the vertical direction 
+			
+			}
+			
+		if(ball.yp >= ball.smax)
+		{
+			ball.yp = 1;        //when the yp get the most value and then become 1
+		}
+		//if (ball.y <= ball.r)
+		//{
+			
+			//ball.yp = -ball.yp;
+			
+		//}
+			
+
+		ball.x += ball.xp; 
+		ball.y += ball.yp;
+        window.requestAnimationFrame(repeatme);
+        
+		}
+	
+       repeatme();
+      // Get the animation going.
+      
+	  
+	  
+	    
+	  
+	
+		
+    </script>
+
+  </body>
+
+</html>

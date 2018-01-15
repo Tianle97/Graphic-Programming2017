@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta charset="UTF-8">
+ <title></title>
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.module.js"></script> -->
+
+
+ <style type="text/css">
+    canvas
+	{
+		border: 2px solid blue;
+	}
+
+ </style>
+ </head>
+ <body>
+ <script type="text/javascript">
+	
+	var width = 800;
+	var height = 600;
+			<!-- Q3 add a scene -->
+	var scene = new THREE.Scene();
+	
+			<!-- Q4 create a sphere and the color is red -->
+	var geomety = new THREE.SphereGeometry(1, 20, 16);	
+	var a = 0x99FF66;
+	var material = new THREE.MeshLambertMaterial( {color: a,} );
+	<!-- scene.add( sphere ); -->
+	var sphere = new THREE.Mesh(geomety, material);
+	scene.add(sphere);
+	<!-- add edges -->
+	edges = new THREE.EdgesHelper( sphere, 0xffffff00 );
+	scene.add(edges);   // 设置边框
+	<!-- add a plane -->
+	var rect = new THREE.PlaneGeometry( 4,4 );
+	var rectmaterial = new THREE.MeshLambertMaterial( { color: 0xff0000ff });
+	var plane = new THREE.Mesh(rect,rectmaterial);
+	plane.receiveShadow = true;
+	scene.add(plane);
+	
+			<!-- Q5 add a camera (Set the field of view to be 80). Apply your canvas width andheight parameters. Also set the camera z-position to be equal to ‘2’ so thatthe camera is not inside the sphere -->
+	var camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight,0.1,1000);
+		camera.position.z = 2;	
+		
+			<!-- Q6 add a renser -->
+	var renderer = new THREE.WebGLRenderer();
+	renderer.setSize(width,height);
+	renderer.shadowMap.enable = true;
+	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+	document.body.appendChild(renderer.domElement);
+	
+	//Add a lighter
+	var Light = new THREE.SpotLight(0xffffff, 2);
+	Light.position.set(1,1,2);
+	Light.castShadow = true;
+	scene.add(Light);
+	
+	//Add a helper
+	var helper = new THREE.CameraHelper( Light.shadow.camera);
+	scene.add(helper);
+	
+	
+	//change color
+	var i = 0;
+	var c = 0.0005;
+	function change(){
+			requestAnimationFrame(change);
+			renderer.render(scene,camera);
+			sphere.rotateX(Math.PI/180);
+			sphere.rotateY(Math.PI/180);
+			//move from left to right
+			sphere.position.x += c;
+			
+			if(sphere.position.x>0)
+			c = -c;
+			if(sphere.position.x<-1)
+			c = -c;
+			
+			if(i++%20==0){
+                sphere.material.color.setHex( a );
+            }
+            a += Math.random()*160;
+            rotateEdges();
+        }
+		change();
+			
+	
+	    function rotateEdges()
+			{
+			    edges.rotateX(Math.PI/180);
+				edges.rotateY(Math.PI/180);
+				//move left to right
+				edges.position.x += c;
+			}
+			
+			
+        function changePlane()
+			{
+			 rect.rotateX(-Math.PI / 4 );
+			 
+			 plane.position.x = -1;
+			 plane.position.y = -2;
+			 plane.position.z = -2;
+		
+			}
+			changePlane();
+	
+ </script>
+ </body>
+</html>
+                                                                                                                                                         

@@ -1,0 +1,158 @@
+呢<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>JavaScript lab2</title>
+
+    <style type="text/css">
+	canvas
+	{
+	border: 5px dashed blue;
+	}
+      
+    </style>
+
+  </head>
+
+  <body>
+    <canvas id="canvas1" width = '900' height= '900'>
+	</canvas>
+		<script type="text/javascript">
+		var canvas = document.getElementById("canvas1");
+		var ctx = canvas.getContext("2d");
+		    
+		var ball = {
+		    x: 100,y: 200,r: 10,
+		move:function (addX, addY)
+			{
+				this.x = this.x + addX;     //make the balls have different position
+				this.y = this.y + addY;
+			},
+			
+			
+		resize:function (radius)
+			{
+				this.r += radius;    //change the ball radius
+			},
+			
+			
+		draw:function ()
+			{
+			 
+				
+				ctx.beginPath();
+				ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+				ctx.fillStyle = "rgb(225,0,0)";
+				ctx.fill();
+				ctx.stroke();
+				ctx.closePath();
+			    
+			}
+			}
+	
+		//draw 3 differnt size balls
+		
+		ball.move(100,200);     
+		ball.resize(20);
+		ball.draw();	           // the first ball 
+		ball.move(100,200);
+		ball.resize(20);
+		ball.draw();               //the second ball
+		ball.move(100,200);
+		ball.resize(20);
+		ball.draw();                //the third ball
+		
+		 
+		
+		
+		//draw a pizza 
+		// create a pizza object
+		var pizza =
+		{
+		i:0.5,x: 500,y: 200,r: 50,addX: 30,addY: 30,theta: 0,thetaInc: 0.2,angle: 0,PX: 100,PY: 100,
+		
+		move:function (addX, addY)    //change the pizza position
+			{
+				this.x = this.x + addX;
+				this.y = this.y + addY;
+			},
+			
+			
+		resize: function (radius)      
+			{
+				this.r += radius;
+			},
+			
+			
+		draw: function(theta,thetaInc,i)
+			{
+			//draw the 7 pieces of pizza	
+				this.theta = theta;
+				this.thetaInc = thetaInc;
+				//this.i = i ;
+				ctx.beginPath();
+				ctx.arc(this.x,this.y,this.r-10,0,2*Math.PI);
+				ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+				
+				for ( this.theta = 0; this.theta <= 14; this.theta = this.theta + 2 )
+				{
+				
+				ctx.moveTo(this.x,this.y);
+				ctx.lineTo(this.x+this.r*Math.cos(((this.theta)/7)*Math.PI),this.y-this.r*Math.sin(((this.theta)/7)*Math.PI));
+				
+				}				
+				
+				ctx.fillStyle = 'orange';
+				ctx.fill();
+				 
+				ctx.stroke();
+				ctx.closePath();
+				
+				},
+		
+		rotate: function()  //make the pizza rotating
+			{
+					
+				this.angle = 0.01;
+				ctx.translate(this.x,this.y);
+				ctx.rotate(this.angle);
+				ctx.translate(-this.x,-this.y);  
+			    		
+			},
+		
+		contains: function(PX,PY)
+		{
+		    this.PX = PX;
+			this.PY = PY;
+			
+			if(((this.PX <= this.x+this.r) && (this.PX >= this.x-this.r)) || ((PY <= this.y+this.r) && (PX >= this.x-this.r)))
+			{
+				return (true);
+			}
+		},
+		}
+
+		function animation()
+		{
+		
+			
+			pizza.draw();	
+			pizza.rotate();
+			window.requestAnimationFrame(animation);
+		
+		}
+		
+		animation();
+			 
+			pizza.move(10,20);
+			pizza.resize(100);
+	        pizza.contains(40,90); 
+			
+	    // pizza.rotate();
+    </script>
+
+  </body>
+
+</html>

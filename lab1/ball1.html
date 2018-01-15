@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Canvas lab1</title>
+
+    <style type="text/css">
+	canvas
+	{
+	border:2px solid black;
+	}
+    </style>
+
+  </head>
+
+  <body>
+<!-- change the size of the canvas -->
+    <canvas id="canvasOne" width = "1000" height = "1200" ></canvas>
+
+    <script type="text/javascript">
+		// Gets a handle to the element with id canvasOne.
+		var canvas = document.getElementById("canvasOne");
+		// Set the canvas up for drawing in 2D.
+		var ctx = canvas.getContext("2d");
+		// Set the fill colour to bright red.Change color
+		ctx.fillStyle = "rgb(0, 0, 225)";
+		// Create a filled rectangle at co-ordinates (10,10)
+		// with height and width set to 100.
+		//change square to a rectangle
+		ctx.fillRect(10, 10, 300, 100);
+		//.stroke() method
+		ctx.strokeStyle = 'red';
+		ctx.strokeRect(10,10,300,100);
+		ctx.stroke();
+		
+			
+		
+		//second rectangle and '.stroke()'method
+		//Use RGBA 
+		ctx.fillStyle = "rgba(0,120,60,0.4)";
+		ctx.fillRect(400,10,300,300);
+		//ctx.strokeStyle = 'green';
+		ctx.strokeRect(400,10,300,300);
+		ctx.stroke();
+		
+		//third rectangle and '.stroke()'method
+		//Use RGBA
+		ctx.fillStyle = "rgba(0,200,60,0.4)";
+		ctx.fillRect(450,60,300,300);
+		//ctx.strokeStyle = 'green';
+		ctx.strokeRect(450,60,300,300);
+		ctx.stroke();
+		
+		
+		//blue circle and '.stroke()'method
+		ctx.beginPath();
+		ctx.arc(200,300,100,0,2*Math.PI);
+		ctx.fillStyle = "rgb(0,0,225)";
+		ctx.fill();
+		ctx.strokeStyle = 'pink';
+		ctx.stroke();
+		ctx.closePath();
+		
+		//red circle and '.stroke()'method
+		ctx.beginPath();
+		ctx.arc(200,600,100,0,2*Math.PI);
+		ctx.fillStyle = "rgb(225,0,0)";
+		ctx.fill();
+		ctx.strokeStyle = 'black';
+		ctx.stroke();	
+		ctx.closePath();
+	
+		
+		//Draw a square with a circle perfectly fitting inside it
+		//red square
+		ctx.fillRect(500,400,200,200);
+		ctx.fillStyle = "rgb(225,0,0)";
+		//green circle
+		ctx.beginPath();
+		ctx.arc(600,500,100,0,2*Math.PI);
+		ctx.fillStyle = "rgb(0,225,0)";
+		ctx.fill();
+		ctx.closePath();
+		
+		
+		
+		
+		
+		
+		
+		//Draw a pac-man color:yellow eye:black
+		ctx.beginPath();
+		ctx.arc(800,800,100,0.1*Math.PI,1.8*Math.PI,false);//false: 逆时针，true：顺时针
+		ctx.lineTo(800,800);
+		ctx.lineTo(800+100*Math.cos(0.1*Math.PI),800+100*Math.sin(0.1*Math.PI));
+		ctx.fillStyle = 'yellow';
+		ctx.fill();
+		ctx.stroke();
+		ctx.closePath();
+		
+		//eye
+		ctx.beginPath();
+		ctx.arc(780,760,15,0,2*Math.PI);
+		ctx.fillStyle = "rgb(0,0,0)";
+		ctx.fill();
+		ctx.stroke();
+		ctx.closePath();
+		
+		//Draw a cirle below red circle and after 3 seconds right to 50px
+		function draw()
+		{
+		    var x =400; 
+			ctx.fillRect(x,700,100,100);	
+			
+		    setTimeout(function(){
+			x = x + 50;
+			ctx.clearRect(400,700,100,100);
+			ctx.fillRect(x,700,100,100);},3000);
+		
+        }		
+         draw();		
+	  
+		
+    </script>
+
+  </body>
+
+</html>
+

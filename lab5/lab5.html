@@ -1,0 +1,220 @@
+<!--G00353418 Tianle SHU-->
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>collision</title>
+</head>
+
+<body>
+
+    <canvas id="canvas" width="800" height="600" style="border: 3px solid darkblue"></canvas>
+    
+    <script>
+        
+        window.onload = function () {
+            var canvas = document.getElementById('canvas'),
+                context = canvas.getContext('2d'),
+                ball0 = new Ball(40),
+                ball1 = new Ball(30),
+                bounce = -1.0;
+            
+            
+             //set a ball1 mass initial positin and speeds.
+            ball0.mass = 2;    
+            ball0.x = canvas.width - 200;
+            ball0.y = canvas.height - 200;
+            ball0.vx = Math.random() * 10 - 5;
+            ball0.vy = Math.random() * 10 - 5;
+             
+            
+             //set a ball2 mass initial positin and speeds.
+            ball1.mass = 1;
+            ball1.x = 100;
+            ball1.y = 100;
+            ball1.vx = Math.random() * 10 - 5;
+            ball1.vy = Math.random() * 10 - 5;
+
+
+            var canvasPosition = {
+                y: canvas.offsetTop,
+                x: canvas.offsetLeft
+	            }
+                
+
+            function rotate(x, y, sin, cos, reverse) {
+                return {
+                    x: (reverse) ? (x * cos + y * sin) : (x * cos - y * sin),
+                    y: (reverse) ? (y * cos - x * sin) : (y * cos + x * sin)
+                };
+            }
+
+            function checkCollision(ball0, ball1) {
+                var dx = ball1.x - ball0.x,
+                    dy = ball1.y - ball0.y,
+                    dist = Math.sqrt(dx * dx + dy * dy);
+          
+                if (dist < ball0.radius + ball1.radius) {
+                
+                    var angle = Math.atan2(dy, dx),
+                        sin = Math.sin(angle),
+                        cos = Math.cos(angle),
+                        
+                        pos0 = {
+                            x: 0,
+                            y: 0
+                        }, 
+                      
+                        pos1 = rotate(dx, dy, sin, cos, true),
+                
+                        vel0 = rotate(ball0.vx, ball0.vy, sin, cos, true),
+                      
+                        vel1 = rotate(ball1.vx, ball1.vy, sin, cos, true),
+                       
+                        vxTotal = vel0.x - vel1.x;
+                    vel0.x = ((ball0.mass - ball1.mass) * vel0.x + 2 * ball1.mass *
+
+                            vel1.x) /
+                        (ball0.mass + ball1.mass);
+                    vel1.x = vxTotal + vel0.x;
+           
+                    pos0.x += vel0.x;
+                    pos1.x += vel1.x;
+                  
+                    var pos0F = rotate(pos0.x, pos0.y, sin, cos, false),
+                        pos1F = rotate(pos1.x, pos1.y, sin, cos, false);
+             
+                    ball1.x = ball0.x + pos1F.x;
+                    ball1.y = ball0.y + pos1F.y;
+                    ball0.x = ball0.x + pos0F.x;
+                    ball0.y = ball0.y + pos0F.y;
+                   
+                    var vel0F = rotate(vel0.x, vel0.y, sin, cos, false),
+                        vel1F = rotate(vel1.x, vel1.y, sin, cos, false);
+                    ball0.vx = vel0F.x;
+                    ball0.vy = vel0F.y;
+                    ball1.vx = vel1F.x;
+                    ball1.vy = vel1F.y;
+                }
+            }
+             
+            
+            function checkWalls(ball) {
+                if (ball.x + ball.radius > canvas.width) {
+                    ball.x = canvas.width - ball.radius;
+                    ball.vx *= bounce;
+                } else if (ball.x - ball.radius < 0) {
+                    ball.x = ball.radius;
+                    ball.vx *= bounce;
+                }
+                if (ball.y + ball.radius > canvas.height) {
+                    ball.y = canvas.height - ball.radius;
+                    ball.vy *= bounce;
+                } else if (ball.y - ball.radius < 0) {
+                    ball.y = ball.radius;
+                    ball.vy *= bounce;
+                }
+            }
+            
+            function mouse(event){
+	         var mouse = {
+		     x: event.clientX - canvasPosition.x,       //mouse x position
+		     y: event.clientY - canvasPosition.y,	   //mouse y position
+                 }
+             ball0.x = mouse.x;
+             ball0.y = mouse.y;
+                }
+           
+            function doKey(event){
+                switch (event.keyCode) {
+                case 38:  // Up arrow was pressed 
+                ball0.vy-=1;
+                ball0.y+=ball0.vy;
+                break;
+                case 40:  // Down arrow was pressed 
+                ball0.vy+=1;
+                ball0.y+=ball0.vy;
+                break;
+                case 37:  // Left arrow was pressed 
+                ball0.vx-=1;
+                ball0.x+=ball0.vx;
+                break;
+                case 39:  // Right arrow was pressed 
+                ball0.vx+=1;
+                ball0.x+=ball0.vx;
+                break;
+}
+}
+
+            (function drawFrame() {
+                window.requestAnimationFrame(drawFrame, canvas);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.strokeRect(0, 0, canvas.width, canvas.height);
+
+                ball0.x += ball0.vx;
+                ball0.y += ball0.vy;
+                ball1.x += ball1.vx;
+                ball1.y += ball1.vy;
+                checkCollision(ball0, ball1);
+                checkWalls(ball0);
+                checkWalls(ball1);
+                ball0.draw(context);
+                ball1.draw(context);
+            }());
+            window.addEventListener('keydown',doKey,true);
+            window.addEventListener('click',mouse,true);
+        };
+
+       function Ball(radius, color) {
+            if (radius === undefined) {
+                radius = 40;
+            }
+            if (color === undefined) {
+                color = "lightgreen";
+            }
+            this.x = 0;
+            this.y = 0;
+            this.radius = radius;
+            this.vx = 0;
+            this.vy = 0;
+            this.mass = 1; //质量
+            this.rotation = 0;
+            this.scaleX = 1;
+            this.scaleY = 1;
+            this.color = color
+            this.lineWidth = 1;
+        }
+
+        Ball.prototype.draw = function (context) {
+            context.save();
+            context.translate(this.x, this.y);
+            context.rotate(this.rotation);
+            context.scale(this.scaleX, this.scaleY);
+
+            context.lineWidth = this.lineWidth;
+            context.fillStyle = this.color;
+            context.beginPath();
+            //x, y, radius, start_angle, end_angle, anti-clockwise
+            context.arc(0, 0, this.radius, 0, (Math.PI * 2), true);
+    
+            context.closePath();
+            context.fill();
+            if (this.lineWidth > 0) {
+                context.stroke();
+            }
+            context.restore();
+        };
+
+        Ball.prototype.getBounds = function () {
+            return {
+                x: this.x - this.radius,
+                y: this.y - this.radius,
+                width: this.radius * 2,
+                height: this.radius * 2
+            };
+        };
+    </script>
+</body>
+
+</html>

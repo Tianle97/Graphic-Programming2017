@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<!--  Q2-->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+ 
+<head>
+    <title>D3.js Demo</title>
+    <meta charset="UTF-8">
+    <style type="text/css">
+        path {
+            stroke: steelblue;
+            stroke-width: 1;
+            fill: none;
+        }
+         
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: grey;
+            stroke-width: 1;
+            shape-rendering: crispEdges;
+        }
+    </style>
+</head><body>
+    <script type="text/javascript">
+     //    Q4
+        function plotCurrencyData(data) {
+            console.log(JSON.stringify(data));
+            var margin = {
+                    top: 50,
+                    right: 50,
+                    bottom: 50,
+                    left: 50
+                },
+                width = 900 - margin.left - margin.right,
+                height = 670 - margin.top - margin.bottom;
+            
+            //5.2
+            var y = d3.scaleLinear()
+                .domain(d3.extent(data, function (d) {
+                    return d["GBP/EUR"]
+                }))
+                .range([height, 0]);
+            var parseDate = d3.timeParse("%d/%m/%Y");
+            var x = d3.scaleTime()
+                .domain(d3.extent(data, function (d) {
+                    return parseDate(d["Date"]);
+                }))
+                .range([0, width]);
+            
+            //5.3 5.4 5.5
+            var xAxis = d3.axisBottom(x)
+                .ticks(10);
+            var yAxis = d3.axisLeft(y)
+                .ticks(10);
+ 
+            var valueLine = d3.line()
+                .x(function (d) {
+                    return x(parseDate(d["Date"]));
+                })
+                .y(function (d) {
+                    return y(d["GBP/EUR"]);
+                });
+        
+            var svg = d3.select('body')
+                .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                    .attr("transform", "translate(" + margin.right + "," + margin.bottom + ")");
+ 
+ 
+            svg.append('g')
+                .attr('class', 'x axis')
+                .call(xAxis);
+ 
+            svg.append('g')
+                .attr('class', 'y axis')
+                .call(yAxis);
+            
+            //5.6
+			svg.append("g")      
+				.style("font", "14px times")  
+				.attr("transform", "translate(0," + height + ")")
+				.call(d3.axisBottom(x));
+		
+ 
+            svg.append("path")
+                .attr("d", valueLine(data));
+        }
+         
+        function callback(json) {
+            // console.log(JSON.stringify(json.currency));
+            data = json.currency;
+            plotCurrencyData(data);
+ 
+ 
+        }
+         
+        $.ajax({
+            url: "http://34.249.149.110:5000/",
+            dataType: "jsonp"
+        });
+ 
+         
+    </script>
+</body>
+ 
+</html>

@@ -1,0 +1,107 @@
+<!--G00353418 Tianle SHU-->
+
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Canvas Test</title>
+ <style type="text/css">
+      body {
+          background-color: white;
+      }
+      canvas {
+	          border-style: dashed;
+			  border-color: lawngreen;
+              color:cornflowerblue; 
+			  }
+    </style>
+
+</head>
+<body>
+<section>
+<div>
+<canvas id="packman" width="480" height="480"></canvas>
+</div>
+
+<script>
+
+var canvas = document.getElementById("packman");
+var ctx = canvas.getContext("2d");
+
+var x = 30;
+var y = 30;
+//var vx = 5;
+//var vy = 5;
+var r = 30;
+var width = 800;
+var height = 600;
+var i =1;
+
+    //draw a pacan
+function packman(r) {
+	 
+      ctx.beginPath();
+	  ctx.fillStyle = "yellow";
+	  ctx.arc(0,0,r,Math.PI/4,Math.PI*1.75,false);
+	  ctx.lineTo(0,0); 
+	  ctx.moveTo(0,0);
+	  ctx.lineTo(0+(Math.cos(Math.PI/4)*r),0+(Math.sin(Math.PI/4)*r));
+	  ctx.stroke();
+	  ctx.fill();
+	  ctx.beginPath();
+	  ctx.arc(0,0-15,3,0,Math.PI*2,false);
+	  ctx.stroke();
+	  ctx.closePath();
+	 
+}
+
+    //draw a path
+function rect(x,y,w,h) {
+ctx.beginPath();
+ctx.rect(x,y,w,h);
+ctx.closePath();
+ctx.fill();
+ctx.strokeStyle ="lightgreen";
+ctx.stroke();
+}
+
+
+    //if after 400 steps pacman will turn PI/2
+function turn()
+{
+	
+	if(i++%400 == 0){
+		ctx.rotate(Math.PI/2);
+	}
+ clear();
+ ctx.translate(1,0);
+ packman(30);
+window.requestAnimationFrame(turn);
+
+}
+    
+    //clear
+function clear(){
+	
+	ctx.save();
+	ctx.setTransform(1,0,0,1,0,0);
+	ctx.clearRect(0, 0, width, height);
+	ctx.strokeRect(80,70,310,330);
+	ctx.restore();
+   
+
+}
+ctx.translate(30,30);
+turn();
+
+     			 
+
+
+//window.addEventListener('keydown',doKey,true);
+//window.addEventListener('click',mouse,true);
+
+
+</script>
+</section>
+</body>
+</html>

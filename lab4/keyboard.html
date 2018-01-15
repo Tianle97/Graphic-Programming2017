@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+
+<html>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <head>
+    <meta charset="UTF-8">
+    <title>Canvas</title>
+
+    <style type="text/css">
+		canvas 
+		{
+			border: 1px solid grey; 
+		}
+    </style>
+
+  </head>
+
+  <body>
+
+    <canvas id="canvas-for-ball" width = '500' height = '500'>
+	</canvas>
+
+    <script type="text/javascript">
+		// Gets a handle to the element with id canvasOne.
+		var canvas = document.getElementById("canvas-for-ball");
+		// Get a 2D context for the canvas.
+		var ctx = canvas.getContext("2d");
+		// Make the fill style red.
+		//ctx.fillStyle = "rgb(255, 0, 0)";
+
+		// Add a Javascript event listener to the keypress event.
+		
+		window.addEventListener("keypress",function(event){
+				console.log(event);
+				});
+			// Just log the event to the console.
+			
+			//console.log(event);
+		
+		   
+		    var x = 100;
+			var y = 200;
+			var radium = 50;
+			var vx = 5;
+			var vy = 6;
+			var px = 300;
+			var py = 200;
+			var r = 50;
+			var vpx = 6;
+			var vpy = 8;
+			
+		function drawpissa() // draw a pissa
+		{
+			ctx.beginPath();
+			ctx.arc(px, py, r, 0,2*Math.PI);
+			ctx.arc(px, py, r-10,0,2*Math.PI);
+			ctx.fillStyle = "orange";
+			ctx.fill()
+			for (var i= 0; i <= 14; i = i+2)
+			{
+				ctx.moveTo(px , py);
+				ctx.lineTo(px+r*Math.cos((i/7)*Math.PI),py+r*Math.sin((i/7)*Math.PI));
+			}
+			
+			ctx.strokeStyle = "black";
+			ctx.stroke();
+			
+		}
+			
+		
+		function drawBall()  //draw a ball
+		{
+		
+			ctx.beginPath();
+			ctx.arc(x, y, radium, 0, 2*Math.PI);
+			ctx.fillStyle = "yellow";
+			ctx.strokeStyle = "red";
+			ctx.stroke();
+			ctx.fill();	
+		}
+		
+		
+		function clear()  
+		{
+		   ctx.clearRect(0, 0, canvas.width, canvas.height);
+		}
+		
+		
+		function bounce()   // if hit the border it will reverse movement
+		{
+		    
+			
+			if((x > canvas.width - radium )||(x < radium))
+			{
+				vx = -vx;
+			}
+			if((y <= radium)||(y > canvas.height - radium))
+			{
+				vy = -vy;
+			}
+			if((px > canvas.width - r )||(px < r))
+			{
+				vpx = -vpx;
+			}
+			if((py <= r)||(py > canvas.height - r))
+			{
+				vpy = -vpy;
+			}
+			
+			
+				
+		}
+		     
+				
+		
+		function move(e)  // press upkey will add vy and vpx,press downkey will decrease vy and vpy
+		                  // press rightkey will add vy and vpx,press leftkey will decrease vy and vpy
+		{
+			bounce();
+			switch (e.keyCode) 
+			{
+			
+			// key code for left arrow
+			case 37:
+			vx--;
+			vpx--;
+				console.log('left arrow key pressed!');
+				break;
+
+				
+			// key code for right arrow
+			case 39:
+			vx++;
+			vpx++;
+				console.log('right arrow key pressed!');
+				break;
+			
+			//	key code for up arrow
+			case 38:
+			vy++;
+			vpy++;
+				console.log('up arrow key pressed!');
+				break;
+				
+			//  key code for up arrow
+			case 40:
+			vy--;
+			vpy--;
+				console.log('down arrow key pressed!');
+				break;
+			}
+	     
+		}
+		
+		function moveBall()
+		{
+			
+		    clear();
+		    bounce();
+			x = x + vx;
+			y = y + vy;
+			px = px + vpx;
+			py = py + vpy;
+			
+			drawBall();
+			drawpissa();
+			
+			window.requestAnimationFrame(moveBall);
+		}
+		
+		moveBall();
+		window.addEventListener('keydown',move,true);
+		
+		
+		canvas.addEventListener("click", function(event)
+		//if click the ball will stop at mouse and vx and vy equal to 0.
+		{ 
+		x = event.pageX - ctx.canvas.offsetLeft;   
+		y = event.pageY - ctx.canvas.offsetTop;
+				
+		drawBall();
+		vx = 0;
+		vy = 0;
+		
+        noClicks += 1;
+        console.log(noClicks);
+        },false);
+    </script>
+
+  </body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

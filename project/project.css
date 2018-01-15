@@ -1,0 +1,157 @@
+    body
+        {
+            border: 5px dashed blue;   
+            height: 600px;
+            width: 1200px;
+            position: absolute;
+            left: 10px;
+        }
+    canvas
+        {
+            border: 2px solid orange;
+            
+            position: absolute;
+            top: 20px;
+            left: 480px;
+            
+        }
+        
+        
+    .pizza
+        {
+            color: darkblue; 
+            background-color:lightsalmon;
+            height: 50px;
+            width: 100px;
+            font-family:monospace;
+            font-size: 16px;
+            border-radius: 8px;
+            box-shadow: 0 9px #999;
+            outline: none;
+            box-shadow: 0,9px,#999;
+            position: absolute;
+            top: 450px;
+            left: 20px;
+            cursor: pointer;
+            
+        }
+    .pizza:hover 
+        {
+            background-color:lightgreen;
+        }
+    .pizza:active
+        {
+           background-color: #3e8e41;
+           box-shadow: 0 5px #666;
+           transform: translateY(4px);
+        }
+        
+        
+        
+        
+    .ball
+        {
+            color: darkblue; 
+            /*  背景颜色 */
+            background-color:lawngreen;
+            /*  按钮大小 */
+            height: 50px;
+            width: 100px;
+            /*  字体样式 */
+            font-family:monospace;
+            /*  设置字体大小 */
+            font-size: 16px;
+            /*  使边框有弧度 */
+            border-radius: 8px;
+            box-shadow: 0 9px #999;
+            /*  阴影  */
+            outline: none;
+            box-shadow: 0,9px,#999;   
+            position: absolute;
+            top: 450px;
+            left: 130px;
+            cursor: pointer;
+            
+            
+        }
+    .ball:hover 
+        {
+            background-color:lightblue;
+        }
+    .ball:active
+        {
+           background-color:lightblue;
+           box-shadow: 0 5px #666;
+           transform: translateY(4px);
+        }
+        
+        
+        
+    .clear
+        {
+        
+            background-color: white; 
+            height: 50px;
+            width: 100px;
+            border: 2px solid #4CAF50;
+            /* Green */
+            color: #4CAF50;     
+            font-size: 16px;
+            -webkit-transition-duration: 0.4s;  /* Safari */
+            transition-duration: 0.4s;
+            border-radius: 8px;
+            /*设定位置*/
+            position:absolute;
+            top: 390px;
+            left: 20px;
+            cursor: pointer;
+        
+        }
+    .clear:hover 
+        {
+            border: 2px solid white;
+            color: white;
+            background-color:#4CAF50;
+        }
+    .clear:active
+        {
+           background-color: #3e8e41;
+           box-shadow: 0 5px #666;
+           transform: translateY(4px);
+        }
+
+    .collision
+        {
+            color: darkblue; 
+            /*  背景颜色 */
+            background-color:lightseagreen;
+            /*  按钮大小 */
+            height: 50px;
+            width: 100px;
+            /*  字体样式 */
+            font-family:monospace;
+            /*  设置字体大小 */
+            font-size: 16px;
+            /*  使边框有弧度 */
+            border-radius: 8px;
+            box-shadow: 0 9px #999;
+            /*  阴影  */
+            outline: none;
+            box-shadow: 0,9px,#999;   
+            position: absolute;
+            top: 450px;
+            left: 240px;
+            cursor: pointer;
+            
+            
+        }
+    .collision:hover 
+        {
+            background-color:orchid;
+        }
+    .collision:active
+        {
+           background-color:lightblue;
+           box-shadow: 0 5px #666;
+           transform: translateY(4px);
+        }

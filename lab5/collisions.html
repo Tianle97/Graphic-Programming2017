@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Collisions</title>
+    <style type="text/css">
+      canvas {
+        border: 1px solid grey; 
+      }
+    </style>
+  </head>
+  <body>
+	<p>Collisions.</p>
+    <canvas id="canvas-for-ball" width = '100' height = '100'></canvas>
+    <script type="text/javascript">
+		  // Gets a handle to the element with id canvasOne.
+		  var canvas = document.getElementById("canvas-for-ball");
+		  // Get a 2D context for the canvas.
+		  var ctx = canvas.getContext("2d");
+		  // Make the fill style red.
+      function init()
+	  {
+			canvas.width = 800;
+			canvas.height = 600;
+	  }
+	  init();
+	  class Ball
+	  {
+			constructor(x, y, r, mass, vx, vy)
+			{
+			    this.x = x;
+                this.y = y;
+                this.r = r;
+                this.vy = vy;
+                this.vx = vx;
+                this.mass = mass;
+			}
+			resize()
+			{
+			   this.r += 1;
+               if (this.r > 30)
+                {
+					this.r -= 1;
+				}
+				if (this.r <5)
+				{
+					this.r += 1;
+				}
+			}
+			rotate ()
+			{
+				var angle = 0;
+				angle += 0.01;
+			}
+			drawball()
+			{
+				ctx.beginPath();
+				this.setColour();
+				ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+				ctx.arc(this.x, this.y, this.r-5, 0, 2*Math.PI);
+				ctx.fill();
+				
+				for (var i= 0; i <= 14; i = i+2)
+				{
+					ctx.moveTo(this.x , this.y);
+					ctx.lineTo(this.x+this.r*Math.cos((i/7)*Math.PI), this.y+this.r*Math.sin((i/7)*Math.PI));
+				}
+				ctx.strokeStyle = "black";
+				ctx.stroke();
+			}
+			setColour(c)
+			{
+				return ctx.fillStyle = c;
+				
+			}
+			move()
+			{
+			    this.x += this.vx;
+                this.y += this.vy;
+			    if((this.y >= canvas.height - this.r) || (this.y <= this.r)) 
+				{
+					this.vy = -this.vy;
+				}
+				if ((this.x >= canvas.width - this.r) || (this.x <= this.r))
+				{
+					this.vx = -this.vx;
+				}
+			}		
+		}
+		var b1 = new Ball (100,100,50,2,2,2);
+		var b2 = new Ball (200,200,30,4,5,6);
+		var ball = [b1,b2];
+		//if the 2 pissa collision the console will output 'They are collision!'
+		function collision(ball1,ball2)
+		{
+			//calculate distance between b1 and b2
+			var dx = ball1.x - ball2.x;
+            var dy = ball1.y - ball2.y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < ball1.r + ball2.r) {
+				//we can see "They are collised" on the console
+				console.log("They are collised\n");
+				//calculate collision angle
+				var collision_angle = Math.atan2(dy, dx);
+				//calculate the ball1's speed and ball2's speed
+                var speed_1 = Math.sqrt(ball1.vx * ball1.vx + ball1.vy * ball1.vy);
+                var speed_2 = Math.sqrt(ball2.vx * ball2.vx + ball2.vy * ball2.vy);
+                var direction_1 = Math.atan2(ball1.vy, ball1.vx);
+                var direction_2 = Math.atan2(ball2.vy, ball2.vx);
+			    //calculate ball1's vx and vy after collisioned
+				var new_vx_1 = speed_1 * Math.cos(direction_1 - collision_angle);
+                var new_vy_1 = speed_1 * Math.sin(direction_1 - collision_angle);
+			    //calculate ball2's vx and vy after collisioned
+				var new_vx_2 = speed_2 * Math.cos(direction_2 - collision_angle);
+                var new_vy_2 = speed_2 * Math.sin(direction_2 - collision_angle);
+                var final_vx_1 = ((ball1.mass - ball2.mass) * new_vx_1 + (ball2.mass + ball2.mass) * new_vx_2) / (ball1.mass + ball2.mass);
+                var final_vx_2 = ((ball1.mass + ball1.mass) * new_vx_1 + (ball2.mass - ball1.mass) * new_vx_2) / (ball1.mass + ball2.mass);
+                var final_vy_1 = new_vy_1;
+                var final_vy_2 = new_vy_2;
+                ball1.vx = Math.cos(collision_angle) * final_vx_1 + Math.cos(collision_angle + Math.PI / 2) * final_vy_1;
+                ball1.vy = Math.sin(collision_angle) * final_vx_1 + Math.sin(collision_angle + Math.PI / 2) * final_vy_1;
+                ball2.vx = Math.cos(collision_angle) * final_vx_2 + Math.cos(collision_angle + Math.PI / 2) * final_vy_2;
+                ball2.vy = Math.sin(collision_angle) * final_vx_2 + Math.sin(collision_angle + Math.PI / 2) * final_vy_2;
+			}
+		}
+		function move(e)
+		{
+			switch (e.keyCode)
+			{
+				//key code for left arrow and descease the vx
+				case 37:
+				b1.vx--;
+				b2.vx--;
+					console.log('left arrow key pressed!');
+					break;
+				// key code for right arrow and increase the vx
+				case 39:
+				b1.vx++;
+				b2.vx++;
+					console.log('right arrow key pressed!');
+					break;
+				//	key code for up arrow and increase the vy
+				case 38:
+				b1.vy++;
+				b2.vy++;
+					console.log('up arrow key pressed!');
+					break;
+				//  key code for up arrow and descrease the vy
+				case 40:
+				b1.vy--;
+				b2.vy--;
+					console.log('down arrow key pressed!');
+					break;
+			}
+		}
+			window.addEventListener("click",
+			//if click mouse they will stop and vy and vy both equal to 0. 
+			//you need use keboard and then they will remove
+			function(event)
+			{
+				b1.x = event.pageX - ctx.canvas.offsetLeft;
+				b1.y = event.pageY - ctx.canvas.offsetTop;
+				b2.x = event.pageX - ctx.canvas.offsetLeft;
+				b2.y = event.pageY - ctx.canvas.offsetTop;
+				b1.vx = 0;
+				b2.vx = 0;
+				b1.vy = 0;
+				b2.vy = 0;
+			});
+		function clear()
+		{
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+		}
+		function step()
+		{
+			clear();
+			b1.drawball();
+			b2.drawball();
+			b1.setColour("orange");
+			b2.setColour("orange");
+			b1.move();
+			b2.move();
+			collision(b1,b2);
+			ball.forEach(
+			function (ball)
+			{
+              ball.resize();
+                document.onkeydown = move;
+		    }); 
+			window.requestAnimationFrame(step)
+		}
+		step();
+    </script>
+  </body>
+</html> 

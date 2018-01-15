@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ <title>Transformations</title>
+ <meta charset="UTF-8">
+ <style type="text/css">
+    canvas{
+	border: 3px solid blue;
+	}
+ </style>
+ </head>
+ <body>
+ <canvas id="transformcan" width = '800' height = '800'></canvas>
+ <script type="text/javascript">
+	 var canvas = document.getElementById("transformcan");		  
+     var ctx = canvas.getContext("2d");
+	 class Pacman
+	{
+		constructor(x,y,r)
+		{
+			this.x = x;
+            this.y = y;
+			this.r = r;
+			this.speed = 1.3;
+		}
+	 //draw a packman
+	 drawPackman()
+     {
+	    ctx.beginPath();
+		ctx.arc(this.x, this.y, this.r, Math.PI / 4, Math.PI * 1.75);
+		ctx.lineTo(this.x, this.y);
+		// can calculate the final position using co-ordinate transformation
+		// requires x offset since the default starting point is the origin point of the canvas
+		var newX = this.r * Math.cos(Math.PI / 4) + this.x; 
+		var newY = this.r * Math.sin(Math.PI / 4) + this.y;
+		ctx.lineTo(newX, newY);
+		// can also use built method to return to the starting point of the path
+		ctx.fillStyle = "yellow"
+		ctx.fill();
+		// draw a border around it
+		ctx.strokeStyle = "black";
+		ctx.stroke();
+		// draw the eye.
+		ctx.beginPath(); 
+		// this is a new shape 
+		// go halfway up from the midpoint
+		// the eye will have 15% the radius size of the pacman itself
+		ctx.arc(this.x, this.y - this.r / 2, this.r * 0.15, 0, 2 * Math.PI);
+		ctx.fillStyle = "black";
+		ctx.fill();
+		ctx.strokeStyle = "white";
+		ctx.stroke();
+	}
+	 //changge packman's direct
+	 changeDirection()
+	 {
+		if(this.direction == "RIGHT"){
+			this.direction = "DOWN";
+		} else if(this.direction == "DOWN"){
+			this.direction = "LEFT";
+		} else if(this.direction == "LEFT"){
+			this.direction = "UP";
+		} else if(this.direction == "UP"){
+			this.direction = "RIGHT";
+		}
+     }
+	 update () 
+	 {
+		switch(this.direction)
+		{
+			case "RIGHT":
+				this.x += this.speed;
+			break;
+			case "DOWN":
+				this.y += this.speed;
+			break;
+			case "LEFT":
+				this.x -= this.speed;
+			break;
+			case "UP":
+				this.y -= this.speed;
+			break;
+		}
+	 }
+  }
+	var pacman= new Pacman(canvas.width / 6, canvas.height/6, 35);
+	pacman.direction = "RIGHT";
+	function clear() 
+	{
+        ctx.save();
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.restore();
+	}
+	var nosteps = 0;
+	var angle = 0;
+	function step()
+	{
+		nosteps++;
+		if(nosteps % 400 == 0){
+			// usage example found here https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Transformations
+			angle += Math.PI / 2;
+			pacman.changeDirection();
+		}
+		ctx.transform(1, 0, 0, 1, pacman.x, pacman.y);
+		var cosOfAngle = Math.cos(angle);
+		var sinOfAngle = Math.sin(angle);
+		// rotate the canvas with transform.
+		ctx.transform(cosOfAngle, sinOfAngle, -sinOfAngle, cosOfAngle, 0, 0);
+		ctx.transform(1,0,0,1, -pacman.x, -pacman.y);
+	}
+	//draw a rectangle on canvas's center
+	function drawPath(){
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.beginPath();
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		ctx.clearRect(100, 100, canvas.width - 200, canvas.height - 200);
+		ctx.fillRect(200, 200, canvas.width - 400, canvas.height - 400);
+	}
+	// move to pacman's current position.
+	ctx.translate(pacman.x, pacman.y); 
+	function repeatme()
+	{
+	    clear();
+		drawPath();
+		step();
+		pacman.drawPackman();
+		pacman.update();
+	    window.requestAnimationFrame(repeatme);
+    }
+	  repeatme();
+  </script>
+ </body>
+</html
